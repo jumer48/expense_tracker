@@ -1,0 +1,52 @@
+<h1><%= current_user.admin? ? 'Dashboard' : 'My Expenses' %></h1>
+
+<% if current_user.admin? %>
+  <section class="admin-section">
+    <h2>User Management</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Expense Count</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @users.each do |user| %>
+          <tr>
+            <td><%= user.email %></td>
+            <td><%= user.expenses.count %></td>
+            <td>
+              <%= link_to "View Expenses", admin_user_path(user), class: "btn btn-sm btn-info" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </section>
+<% else %>
+  <section class="expenses-section">
+    <% if @expenses.any? %>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Amount</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @expenses.each do |expense| %>
+            <tr>
+              <td><%= expense.name %></td>
+              <td><%= number_to_currency(expense.amount) %></td>
+              <td><%= expense.date.strftime("%b %d, %Y") %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p>No expenses found.</p>
+    <% end %>
+  </section>
+<% end %>
